@@ -18,7 +18,7 @@ if city:
 
         if not geo_response:
             st.error("❌ Not a valid city. Please try again.")
-            else:
+        else:
             lat = geo_response[0]['lat']
             lon = geo_response[0]['lon']
             city_name = geo_response[0]['name']
