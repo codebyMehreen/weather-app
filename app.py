@@ -43,7 +43,7 @@ if city:
 
                 # Show results
                 st.subheader(f"📍 Weather in {city_name}")
-        st.image(icon_url, width=100)
+                st.image(icon_url, width=100)
                 st.markdown(f"🌤 Condition: {desc}")
                 st.markdown(f"🌡 Temperature: {temp}°C")
                 st.markdown(f"💧 Humidity: {humidity}%")
