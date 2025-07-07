@@ -1,15 +1,17 @@
 import streamlit as st
-st.set_page_config(page_title="Weather App", page_icon="🌦️", layout="centered")
-st.title("🌦️ Mehreen's Weather App")
-st.write("Enter a city name below to see current weather conditions.")
 import requests
 
+# --- Streamlit Page Setup ---
 st.set_page_config(page_title="Weather App", page_icon="🌦️", layout="centered")
 
+# --- App Title and Instructions ---
 st.title("🌦️ Mehreen's Weather App")
 st.write("Enter a city name below to see current weather conditions in that location.")
 
+# --- User Input ---
 city = st.text_input("🌍 City Name")
+
+# --- Fetch & Display Weather Info ---
 if city:
     api_key = "8422d0579f796c2c6558875825314c6a"
     url = f"http://api.openweathermap.org/data/2.5/weather?q={city}&appid={api_key}&units=metric"
