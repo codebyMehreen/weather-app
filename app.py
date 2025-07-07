@@ -29,7 +29,7 @@ if city:
 
             if weather_data.get("cod") != 200:
                 st.error("⚠ Weather not found.")
-                else:
+            else:
                 icon = weather_data["weather"][0]["icon"]
                 icon_url = f"http://openweathermap.org/img/wn/{icon}.png"
                 desc = weather_data["weather"][0]["description"].title()
