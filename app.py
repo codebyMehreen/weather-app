@@ -19,8 +19,10 @@ if city:
         url = f"http://api.openweathermap.org/data/2.5/weather?q={city}&appid={api_key}&units=metric"
         response = requests.get(url)
         data = response.json()
-
-        if data.get("cod") != 404:
+        #python
+if data.get("cod") != 200:
+    st.error("❌ City not found. Please enter a valid city name.")
+    st.stop()
             # Basic weather details
             weather = data["weather"][0]["description"].title()
             temp = data["main"]["temp"]
