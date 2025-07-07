@@ -13,6 +13,7 @@ if city:
         url = f"http://api.openweathermap.org/data/2.5/weather?q={city}&appid={api_key}&units=metric"
         response = requests.get(url)
         data = response.json()
+        st.write(data)
 
         if data.get("cod") != "404":
             weather = data["weather"][0]["description"].title()
