@@ -2,54 +2,57 @@ import streamlit as st
 import requests
 from datetime import datetime
 
-# Page configuration
-st.set_page_config(page_title="Weather App", page_icon="🌦️", layout="centered")
-st.title("🌦️ Mehreen's Weather App")
-st.write("Enter a city name below to see current weather conditions.")
+st.set_page_config(page_title="Weather App", page_icon="🌦", layout="centered")
+st.title("🌦 Mehreen's Weather App")
+st.write("Enter a valid city name to get the current weather.")
 
-# Input for city
 city = st.text_input("🌍 City Name")
-
-if not city:
-    st.info("👋 Please enter a city name to get the weather.")
 
 if city:
     try:
-        api_key = "8422d0579f796c2c6558875825314c6a"
-        url = f"http://api.openweathermap.org/data/2.5/weather?q={city}&appid={api_key}&units=metric"
-        response = requests.get(url)
-        data = response.json()
-        #python
-if data.get("cod") != 200:
-    st.error("❌ City not found. Please enter a valid city name.")
-    st.stop()
-            # Basic weather details
-            weather = data["weather"][0]["description"].title()
-            temp = data["main"]["temp"]
-            humidity = data["main"]["humidity"]
-            wind_speed = data["wind"]["speed"]
-            icon_code = data["weather"][0]["icon"]
-            icon_url = f"http://openweathermap.org/img/wn/{icon_code}.png"
+        api_key = "8422d0579f796c2c6558875825314c6a"  # Replace with your OpenWeatherMap API key
 
-            # Timezone-adjusted sunrise and sunset
-            sunrise_ts = data["sys"]["sunrise"]
-            sunset_ts = data["sys"]["sunset"]
-            timezone_offset = data["timezone"]  # in seconds
+        # Validate using Geocoding API
+        geo_url = f"http://api.openweathermap.org/geo/1.0/direct?q={city}&limit=1&appid={api_key}"
+        geo_response = requests.get(geo_url).json()
 
-            sunrise_time = datetime.utcfromtimestamp(sunrise_ts + timezone_offset).strftime("%I:%M %p")
-            sunset_time = datetime.utcfromtimestamp(sunset_ts + timezone_offset).strftime("%I:%M %p")
+        if not geo_response:
+            st.error("❌ Not a valid city. Please try again.")
+            else:
+            lat = geo_response[0]['lat']
+            lon = geo_response[0]['lon']
+            city_name = geo_response[0]['name']
 
-            # Display weather
-            st.subheader(f"📍 Weather in {city.capitalize()}")
-            st.image(icon_url, width=100)
-            st.write(f"🌤️ **Condition:** {weather}")
-            st.write(f"🌡️ **Temperature:** {temp}°C")
-            st.write(f"💧 **Humidity:** {humidity}%")
-            st.write(f"💨 **Wind Speed:** {wind_speed} m/s")
-            st.write(f"🌅 **Sunrise:** {sunrise_time}")
-            st.write(f"🌇 **Sunset:** {sunset_time}")
-        else:
-            st.error("❌ City not found. Please check the spelling and try again.")
+            # Get weather by coordinates
+            weather_url = f"https://api.openweathermap.org/data/2.5/weather?lat={lat}&lon={lon}&appid={api_key}&units=metric"
+            weather_data = requests.get(weather_url).json()
+
+            if weather_data.get("cod") != 200:
+                st.error("⚠ Weather not found.")
+                else:
+                icon = weather_data["weather"][0]["icon"]
+                icon_url = f"http://openweathermap.org/img/wn/{icon}.png"
+                desc = weather_data["weather"][0]["description"].title()
+                temp = weather_data["main"]["temp"]
+                humidity = weather_data["main"]["humidity"]
+                wind = weather_data["wind"]["speed"]
+
+                # Time conversion
+                sunrise = datetime.utcfromtimestamp(weather_data["sys"]["sunrise"] + weather_data["timezone"]).strftime('%I:%M %p')
+                sunset = datetime.utcfromtimestamp(weather_data["sys"]["sunset"] + weather_data["timezone"]).strftime('%I:%M %p')
+
+                # Show results
+                st.subheader(f"📍 Weather in {city_name}")
+        st.image(icon_url, width=100)
+                st.markdown(f"🌤 Condition: {desc}")
+                st.markdown(f"🌡 Temperature: {temp}°C")
+                st.markdown(f"💧 Humidity: {humidity}%")
+                st.markdown(f"💨 Wind Speed: {wind} m/s")
+                st.markdown(f"🌅 Sunrise: {sunrise}")
+                st.markdown(f"🌇 Sunset: {sunset}")
 
     except Exception as e:
-        st.error(f"⚠️ Error: {e}")
+        st.error("⚠ Error: Please try again later.")
+
+        
+                
