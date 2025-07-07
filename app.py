@@ -9,7 +9,7 @@ city = st.text_input("🌍 City Name")
 
 if city:
     try:
-        api_key = ["8422d0579f796c2c6558875825314c6a"]
+        api_key = "8422d0579f796c2c6558875825314c6a"
         url = f"http://api.openweathermap.org/data/2.5/weather?q={city}&appid={api_key}&units=metric"
         response = requests.get(url)
         data = response.json()
