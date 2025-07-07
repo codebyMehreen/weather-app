@@ -13,6 +13,19 @@ if city:
         url = f"http://api.openweathermap.org/data/2.5/weather?q={city}&appid={api_key}&units=metric"
         response = requests.get(url)
         data = response.json()
+        from datetime import datetime
+
+# Extract sunrise and sunset timestamps
+sunrise_ts = data["sys"]["sunrise"]
+sunset_ts = data["sys"]["sunset"]
+
+# Convert timestamps to readable 12-hour format
+sunrise_time = datetime.fromtimestamp(sunrise_ts).strftime("%I:%M %p")
+sunset_time = datetime.fromtimestamp(sunset_ts).strftime("%I:%M %p")
+
+# Display them on the app
+st.write(f"🌅 **Sunrise:** {sunrise_time}")
+st.write(f"🌇 **Sunset:** {sunset_time}")
         #python
         #st.write(data)
 
